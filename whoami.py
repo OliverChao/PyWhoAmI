@@ -1,7 +1,7 @@
 ######################################################
 #
 # PyWhoAmI - Oliver Loves Annabelle 
-# written by Oliver (fie.chao.1009@gmail.com)
+# written by Oliver (fei.chao.1009@gmail.com)
 # inspired by  Annabelle
 #
 ######################################################
