@@ -18,9 +18,9 @@ import __init__
 
 import pdfkit
 import time
-######################################################
-#一些头文件导入和局部变量声明参照开源项目howdoi
-######################################################
+##############################################################
+#reference:howdoi written by Benjamin Gleitzman (gleitz@mit.edu)
+##############################################################
 from retrying import retry
 from pygments import highlight
 from pygments.lexers import guess_lexer, get_lexer_by_name
