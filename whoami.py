@@ -411,7 +411,7 @@ def save_to_pdf(url,args):
     html = html_template.format(title='Oliver loves Annabelle forever~', content=main_page.html())
     
     # wkhtmltopdf_path = r'C:\Users\Oliver\Desktop\wkhtmltox\bin\wkhtmltopdf.exe')
-    wkhtmltopdf_path = os.getcwd()+'/wkhtmltox/bin/wkhtmltopdf.exe'
+    wkhtmltopdf_path = scripFilePath +'/wkhtmltox/bin/wkhtmltopdf.exe'
     config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
 
     if not os.path.exists(PDF_DIR):
