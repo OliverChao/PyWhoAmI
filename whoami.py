@@ -409,7 +409,7 @@ def save_to_pdf(url,args):
         return 
     try:
         print('[*] save to ', filePath)
-        pdfkit.from_string(html, filePath, configuration=config, options=options)
+        pdfkit.from_string(html, filePath, configuration=config)
         print('[*] successfully ')
         # open_PDF_after_save(args,filePath)
     except:
