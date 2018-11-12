@@ -542,7 +542,12 @@ def run():
         if args['number_link'] < 0 or args['number_link'] > 9:
             print('文章编号不正确')
             raise IndexError
-        save_to_pdf(list(result.values())[args['number_link']], args)
+        try:
+            link = list(result.values())[args['number_link']]
+        except IndexError:
+            raise IndexError('文章编号不正确')
+            
+        save_to_pdf(link, args)
         return
 
     if args['cpp']:
