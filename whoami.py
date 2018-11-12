@@ -15,6 +15,7 @@ import requests
 import requests_cache
 import sys
 import __init__
+from concurrent import futures
 
 import pdfkit
 import time
@@ -291,6 +292,8 @@ def get_parser():
     parser.add_argument('query', metavar='QUERY', type=str, nargs='*',
                         help='the article you want to get')
     parser.add_argument('-o', '--open-pdf', help='open the pdf or cpp after save the pdf or cpp', action='store_true')
+    parser.add_argument('-s', '--save', help='save some pdfs ',
+                        type=int, nargs='*')
     parser.add_argument('-c', '--color', help='colorized output',
                         action='store_true')
     parser.add_argument('-p', '--print', help='print the perfect code',
@@ -342,12 +345,24 @@ def save_to_cpp(args, result):
 def open_after_save(args, PDFpath):
     if not args['open_pdf']:
         return
+    try:
+        if len(args['save']):
+            return False
+    except TypeError as e:
+        pass
     # if args['pdf'] and PDFpath.split('.')[-1]!='pdf':
     #     PDFpath += '.pdf'
-    os.popen(PDFpath)
+    else:
+        os.popen(PDFpath)
 
 
 def _test_is_open_if_exists(args,filePath):
+    try:
+        if len(args['save']):
+            return False
+    except TypeError as e:
+        pass
+
     if args['open_pdf']:
         if os.path.exists(filePath):
             print('文件已经存在，直接打开')
@@ -450,6 +465,26 @@ def translate():
         print(trans)
 
 
+def save_many_pdf(s, args):
+    '''
+    11/11/2018 写入，异步爬取多个文件，进行保存
+    :param s: 总 文案列表
+    :param args:
+    :return: None
+    '''
+    start = time.time()
+    workers = min(len(args['save']), 20)
+    links = [s[i] for i in args['save']]
+    # print(links)
+    with futures.ThreadPoolExecutor(workers) as executor:
+        to_do_map={}
+        for url in links:
+            future = executor.submit(save_to_pdf(url,args))
+            to_do_map[future] = url
+        done_iter = futures.as_completed(to_do_map)
+        # executor.map(save_to_pdf, links, args)
+    print('time ',time.time()-start)
+
 def run():
     parser = get_parser()
     args = vars(parser.parse_args())
@@ -501,10 +536,13 @@ def run():
 
     if args['pdf']:
         # print(list(result.values())[args['number_link']])
+        if args['save']:
+            save_many_pdf(list(result.values()), args)
+            return
         if args['number_link'] < 0 or args['number_link'] > 9:
             print('文章编号不正确')
             raise IndexError
-        save_to_pdf(list(result.values())[args['number_link']],args)
+        save_to_pdf(list(result.values())[args['number_link']], args)
         return
 
     if args['cpp']:
