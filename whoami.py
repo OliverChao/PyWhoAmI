@@ -352,8 +352,8 @@ def open_after_save(args, PDFpath):
         pass
     # if args['pdf'] and PDFpath.split('.')[-1]!='pdf':
     #     PDFpath += '.pdf'
-    else:
-        os.popen(PDFpath)
+    
+    os.popen(PDFpath)
 
 
 def _test_is_open_if_exists(args,filePath):
